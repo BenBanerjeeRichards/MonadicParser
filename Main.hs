@@ -17,8 +17,9 @@ instance Functor Parser where
 instance Applicative Parser where
     pure x = result x
     -- <*> Parser (a -> b) -> Parser a -> Parser b
-    (<*>) (Parser fparser) p  = undefined 
-
+    (<*>) fparser p  = 
+        Parser $ \input -> [x | (f, remaining) <- parse fparser input, 
+                                       x <- parse (fmap f p) remaining]  
 
 parseChar :: Char -> Parser Char
 parseChar c =
