@@ -38,6 +38,7 @@ parseChar c =
 
     where
         parse :: String -> [(Char, String)]
+        parse [] = []
         parse (x:xs)
             | x == c = [(x, xs)]
             | otherwise = []
