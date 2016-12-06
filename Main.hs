@@ -9,6 +9,10 @@ newtype Parser a = Parser {
     parse :: String -> [(a, String)]
 }
 
+-- For ghci testing
+p1 = parseChar 'a' 
+p2 = parseChar 'b'
+
 instance Functor Parser where
     -- fmap :: (a -> b) -> Parser a -> Parser b
     fmap f p1 = Parser $ \input ->
