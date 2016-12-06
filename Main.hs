@@ -22,8 +22,11 @@ instance Applicative Parser where
                                        x <- parse (fmap f p) remaining]  
 
 instance Monad Parser where
-    (>>=) = bind
     return = result
+
+    (>>=) = bind
+    (>>) p1 p2 = Parser $ \input -> concat [parse p2 remaining | 
+                                    (match, remaining) <- parse p1 input]
 
 parseChar :: Char -> Parser Char
 parseChar c =
