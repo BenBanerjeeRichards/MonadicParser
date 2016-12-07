@@ -25,7 +25,6 @@ instance Applicative Parser where
     (<*>) fparser p  = 
         Parser $ \input -> [x | (f, remaining) <- parse fparser input, 
                                        x <- parse (fmap f p) remaining]  
-
 instance Monad Parser where
     return = result
 
@@ -53,11 +52,7 @@ parseChar c =
             | otherwise = []
 
 bind :: Parser a -> (a -> Parser b) -> Parser b
-bind p f =
-    Parser parser
-
-    where
-        parser = \input ->
+bind p f = Parser $ \input ->
             let matches = parse p input 
             in concat [parse (f val) remaining | (val, remaining) <- matches]
 
@@ -85,6 +80,7 @@ lower :: Parser Char
 lower = sat isLower 
 
 lower2 :: Parser String
-lower2 = bind lower (\x ->
-          bind lower (\y -> result [x, y]))
-
+lower2 = do
+    x <- lower 
+    y <- lower 
+    return [x, y]
