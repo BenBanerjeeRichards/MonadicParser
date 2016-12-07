@@ -1,6 +1,7 @@
 module Main where
 
 import Data.Char
+import Control.Applicative
 
 main :: IO ()
 main = putStrLn "Hello, Haskell!"
@@ -31,6 +32,14 @@ instance Monad Parser where
     (>>=) = bind
     (>>) p1 p2 = Parser $ \input -> concat [parse p2 remaining | 
                                     (match, remaining) <- parse p1 input]
+
+instance Alternative Parser where
+    empty = zero
+
+    (<|>) p1 p2 = Parser $ \input -> 
+        let attempt1 = parse p1 input
+            attempt2 = parse p2 input
+        in attempt1 ++ attempt2 
 
 parseChar :: Char -> Parser Char
 parseChar c =
